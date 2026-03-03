@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CyberSprint 2026 – Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 1100px; margin: 20px auto; padding: 10px; }
+    h1 { font-size: 24px; }
+    h2 { font-size: 18px; margin-top: 30px; }
+    label { font-weight: bold; }
+    input, select { padding: 6px 10px; margin: 5px 0 15px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+    th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; }
+    th { background: #f2f2f2; }
+    .summary-box { border: 1px solid #ddd; padding: 10px; border-radius: 4px; background: #f9f9f9; }
+    .btn { background: #007bff; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-right: 5px; }
+    .btn:hover { background: #0056b3; }
+    #loginSection { border: 1px solid #ddd; padding: 10px; margin-bottom: 20px; border-radius: 4px; background: #fff7e6; }
+    #adminContent { display: none; }
+  </style>
+  <script src="/js/admin.js" defer></script>
+</head>
+<body>
+  <h1>CyberSprint 2026 – Admin Panel</h1>
+
+  <div id="loginSection">
+    <h2>Admin Login</h2>
+    <label>Password:</label>
+    <input type="password" id="adminPassword" />
+    <button class="btn" id="loginBtn">Login</button>
+    <span id="loginMessage"></span>
+  </div>
+
+  <div id="adminContent">
+    <div>
+      <label>Event: </label>
+      <input type="text" id="eventInput" value="CyberSprint 2026" />
+      <button class="btn" id="refreshBtn">Refresh</button>
+    </div>
+
+    <h2>Summary</h2>
+    <div class="summary-box" id="summaryBox">
+      Loading summary...
+    </div>
+
+    <h2>Registrations</h2>
+    <button class="btn" id="loadRegistrationsBtn">Load Registrations</button>
+    <button class="btn" id="downloadRegistrationsCsvBtn">Download Registrations CSV</button>
+    <table id="registrationsTable">
+      <thead>
+        <tr>
+          <th>CS-ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>WhatsApp</th>
+          <th>University</th>
+          <th>College</th>
+          <th>Course / Year</th>
+          <th>Registered At</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <h2>Attendance</h2>
+    <label>Day: </label>
+    <select id="daySelect">
+      <option value="">All Days</option>
+      <option value="Day 1">Day 1 (12 March)</option>
+      <option value="Day 2">Day 2 (13 March)</option>
+      <option value="Day 3">Day 3 (14 March)</option>
+    </select>
+    <button class="btn" id="loadAttendanceBtn">Load Attendance</button>
+    <button class="btn" id="downloadAttendanceCsvBtn">Download Attendance CSV</button>
+
+    <table id="attendanceTable">
+      <thead>
+        <tr>
+          <th>CS-ID</th>
+          <th>Event</th>
+          <th>Day</th>
+          <th>Status</th>
+          <th>Scan Time</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</body>
+</html>
