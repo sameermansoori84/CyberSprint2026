@@ -4,46 +4,582 @@
   <meta charset="UTF-8" />
   <title>CyberSprint 2026 – Teacher Attendance</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- If you set CSP via meta, you can keep it strict (no unsafe-eval needed).
+       Just ensure the jsQR CDN domain is allowed in script-src if you use CSP. -->
+
   <style>
-    body { font-family: Arial, sans-serif; max-width: 700px; margin: 20px auto; padding: 10px; }
-    h1 { font-size: 22px; }
-    label { display: block; margin: 10px 0 5px; font-weight: bold; }
-    input { width: 100%; padding: 10px; margin-bottom: 15px; box-sizing: border-box; }
-    button { background: #28a745; color: #fff; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin: 5px 5px 10px 0; }
-    button:hover { background: #218838; }
-    .day-btn { background: #6c757d; }
-    .day-btn.active { background: #007bff; }
-    #reader { width: 100%; max-width: 400px; margin: 10px 0; }
-    #result { margin-top: 20px; padding: 10px; border-radius: 4px; }
-    .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-    .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-    #studentDetails { margin-top: 15px; padding: 10px; border-radius: 4px; border: 1px solid #ddd; }
+    :root {
+      --bg: #020617;
+      --bg-elevated: rgba(15, 23, 42, 0.96);
+      --border-subtle: rgba(148, 163, 184, 0.5);
+      --accent: #22c55e;
+      --accent-alt: #0ea5e9;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --danger: #f97373;
+      --radius-lg: 18px;
+      --radius-md: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top, #0f172a 0, #020617 60%, #000 100%),
+        url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23022c22' stop-opacity='0.35' offset='0'/%3E%3Cstop stop-color='%23022c22' stop-opacity='0' offset='1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='160' height='160' fill='none'/%3E%3Cpath d='M0 40h160M0 80h160M0 120h160M40 0v160M80 0v160M120 0v160' stroke='url(%23g)' stroke-width='0.6'/%3E%3C/svg%3E")
+          center / 260px repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 12px;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 960px;
+      border-radius: 24px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: radial-gradient(circle at top left, #0b1120 0, #020617 55%);
+      box-shadow: 0 0 60px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shell::before {
+      content: "";
+      position: absolute;
+      inset: -120px;
+      background:
+        radial-gradient(circle at 10% 0, rgba(56, 189, 248, 0.2) 0, transparent 60%),
+        radial-gradient(circle at 90% 0, rgba(34, 197, 94, 0.18) 0, transparent 55%);
+      opacity: 0.75;
+      pointer-events: none;
+    }
+
+    .shell-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      max-width: 720px;
+      margin: 0 auto;
+      gap: 1.5rem;
+      padding: 1.9rem 1.6rem;
+    }
+
+    .header {
+      margin-bottom: 0.75rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.2rem 0.9rem 0.2rem 0.25rem;
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.55);
+      background: linear-gradient(
+        90deg,
+        rgba(34, 197, 94, 0.16),
+        rgba(8, 47, 73, 0.7)
+      );
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #bae6fd;
+      margin-bottom: 0.65rem;
+    }
+
+    .badge-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #facc15 0, #22c55e 45%, #166534 80%);
+      box-shadow: 0 0 16px rgba(132, 204, 22, 0.9);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      letter-spacing: 0.03em;
+    }
+
+    h1 span {
+      color: #a5b4fc;
+      text-shadow:
+        0 0 15px rgba(129, 140, 248, 0.7),
+        0 0 26px rgba(37, 99, 235, 0.55);
+    }
+
+    .subtitle {
+      margin-top: 0.4rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .meta {
+      margin-top: 0.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+    }
+
+    .meta-chip {
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .meta-chip span {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.95);
+    }
+
+    .panel {
+      background: var(--bg-elevated);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      padding: 1.25rem 1.25rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at top, rgba(56, 189, 248, 0.08) 0, transparent 60%),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.06) 0, transparent 60%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .panel-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.9rem;
+    }
+
+    .panel-heading-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .panel-heading-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .shift-pill {
+      font-size: 0.72rem;
+      padding: 0.27rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.8);
+      background: rgba(15, 23, 42, 0.9);
+      color: #bfdbfe;
+      white-space: nowrap;
+    }
+
+    .day-group {
+      margin-bottom: 1rem;
+    }
+
+    .day-label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #d1d5db;
+      margin-bottom: 0.35rem;
+    }
+
+    .day-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .day-btn {
+      background: rgba(31, 41, 55, 0.95);
+      color: var(--text-main);
+      border-radius: 999px;
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      padding: 0.45rem 0.85rem;
+      font-size: 0.78rem;
+      cursor: pointer;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-width: 120px;
+      transition:
+        background 120ms ease,
+        border-color 120ms ease,
+        box-shadow 120ms ease,
+        transform 80ms ease;
+    }
+
+    .day-btn small {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+    }
+
+    .day-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(96, 165, 250, 0.95);
+      box-shadow: 0 0 16px rgba(37, 99, 235, 0.4);
+    }
+
+    .day-btn.active {
+      background: linear-gradient(90deg, #22c55e, #0ea5e9);
+      color: #020617;
+      border-color: transparent;
+      box-shadow:
+        0 0 18px rgba(56, 189, 248, 0.7),
+        0 0 30px rgba(34, 197, 94, 0.7);
+    }
+
+    /* Scanner area */
+    #cameraContainer {
+      margin-top: 0.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    #video {
+      width: 100%;
+      max-width: 360px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      background: #020617;
+    }
+
+    #canvas {
+      display: none;
+    }
+
+    .scanner-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.3rem;
+    }
+
+    .manual-section {
+      margin-top: 1.2rem;
+      border-radius: var(--radius-md);
+      border: 1px dashed rgba(75, 85, 99, 0.9);
+      padding: 0.8rem 0.9rem;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .manual-title {
+      font-size: 0.86rem;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: #d1d5db;
+      margin-bottom: 0.25rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.6rem 0.7rem;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.97);
+      color: var(--text-main);
+      outline: none;
+      font-size: 0.86rem;
+      transition:
+        border-color 120ms ease,
+        box-shadow 120ms ease,
+        background 120ms ease,
+        transform 80ms ease;
+      box-sizing: border-box;
+      margin-bottom: 0.4rem;
+    }
+
+    input::placeholder {
+      color: rgba(156, 163, 175, 0.9);
+    }
+
+    input:focus {
+      border-color: rgba(56, 189, 248, 0.9);
+      box-shadow:
+        0 0 0 1px rgba(37, 99, 235, 0.6),
+        0 0 0 3px rgba(37, 99, 235, 0.25);
+      transform: translateY(-1px);
+      background: rgba(15, 23, 42, 1);
+    }
+
+    .hint {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      font-size: 0.8rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      background: linear-gradient(90deg, #22c55e, #0ea5e9);
+      color: #020617;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin: 0.25rem 0.35rem 0.25rem 0;
+      transition:
+        transform 80ms ease,
+        box-shadow 120ms ease,
+        filter 120ms ease;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      box-shadow:
+        0 0 18px rgba(56, 189, 248, 0.7),
+        0 0 30px rgba(34, 197, 94, 0.7);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    #markBtn {
+      margin-top: 0.8rem;
+      padding-inline: 1.5rem;
+    }
+
+    #studentDetails {
+      margin-top: 0.9rem;
+      padding: 0.8rem 0.9rem;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(75, 85, 99, 0.95);
+      background: rgba(15, 23, 42, 0.95);
+      font-size: 0.83rem;
+      display: none;
+    }
+
+    #result {
+      margin-top: 0.9rem;
+      padding: 0.75rem 0.85rem;
+      border-radius: var(--radius-md);
+      font-size: 0.83rem;
+    }
+
+    .success {
+      background: rgba(22, 163, 74, 0.18);
+      color: #bbf7d0;
+      border: 1px solid rgba(52, 211, 153, 0.85);
+      box-shadow: 0 0 16px rgba(34, 197, 94, 0.45);
+    }
+
+    .error {
+      background: rgba(127, 29, 29, 0.35);
+      color: #fecaca;
+      border: 1px solid rgba(248, 113, 113, 0.95);
+      box-shadow: 0 0 16px rgba(248, 113, 113, 0.4);
+    }
   </style>
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+  <!-- jsQR: pure JS QR decoder, no unsafe-eval needed -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+
   <script src="/js/teacher.js" defer></script>
 </head>
 <body>
-  <h1>Attendance Panel</h1>
+  <div class="shell">
+    <div class="shell-inner">
+      <!-- Teacher login section -->
+      <section class="panel" style="margin-bottom: 1rem;">
+        <div class="panel-inner">
+          <div class="panel-heading">
+            <div>
+              <div class="panel-heading-title">Teacher authentication</div>
+              <div class="panel-heading-sub">
+                Enter the teacher access password to unlock the attendance console.
+              </div>
+            </div>
+          </div>
 
-  <label>CyberSprint 2026</label>
-    
-  <div>
-    <button class="day-btn active" data-day="Day 1">Day 1 <br>(12 March 2026)</button>
-    <button class="day-btn" data-day="Day 2">Day 2 <br>(13 March 2026)</button>
-    <button class="day-btn" data-day="Day 3">Day 3 <br>(14 March 2026)</button>
+          <form id="teacherLoginForm" style="display:flex; flex-wrap:wrap; gap:0.6rem; align-items:center;">
+            <div>
+              <label for="teacherPassword">Access password</label>
+              <input
+                type="password"
+                id="teacherPassword"
+                placeholder="Enter teacher password"
+                style="min-width:220px;"
+              />
+            </div>
+            <button type="submit" id="teacherLoginBtn">Unlock console</button>
+            <span id="teacherLoginMessage" style="font-size:0.8rem; color:#fca5a5;"></span>
+          </form>
+        </div>
+      </section>
+
+      <!-- Gated teacher content -->
+      <div id="teacherContent" style="display:none;">
+        <!-- Header -->
+        <section class="panel">
+          <div class="panel-inner">
+            <div class="header">
+              <div class="badge">
+                <div class="badge-dot"></div>
+                CyberSprint 2026 · Attendance console
+              </div>
+              <h1>
+               <span>Attendance Panel</span>
+              </h1>
+              <p class="subtitle">
+                Scan student QR passes or manually verify CS‑IDs to mark presence
+                for each event day.
+              </p>
+              <div class="meta">
+                <div class="meta-chip">
+                  <span></span>
+                  Online &amp; offline verification
+                </div>
+                <div class="meta-chip">
+                  <span></span>
+                  Encrypted QR payloads
+                </div>
+              </div>
+            </div>
+
+            <div class="day-group">
+              <div class="day-label">Select event day</div>
+              <div class="day-row">
+                <button class="day-btn active" data-day="Day 1">
+                  Day 1
+                  <small>12 March 2026</small>
+                </button>
+                <button class="day-btn" data-day="Day 2">
+                  Day 2
+                  <small>13 March 2026</small>
+                </button>
+                <button class="day-btn" data-day="Day 3">
+                  Day 3
+                  <small>14 March 2026</small>
+                </button>
+              </div>
+            </div>
+
+            <div class="panel-heading" style="margin-top: 0.6rem">
+              <div>
+                <div class="panel-heading-title">QR scanner</div>
+                <div class="panel-heading-sub">
+                  Start the camera and hold the student’s QR pass in view.
+                </div>
+              </div>
+              <div class="shift-pill">Live stream</div>
+            </div>
+
+            <div id="cameraContainer">
+              <video id="video" autoplay playsinline></video>
+              <canvas id="canvas"></canvas>
+              <div class="scanner-controls">
+                <button id="startCameraBtn">Start camera</button>
+                <button id="stopCameraBtn" disabled>Stop camera</button>
+              </div>
+            </div>
+
+            <div id="result"></div>
+          </div>
+        </section>
+
+        <!-- Manual lookup -->
+        <section class="panel" aria-label="Manual verification and result">
+          <div class="panel-inner">
+            <div class="panel-heading">
+              <div>
+                <div class="panel-heading-title">Manual CS‑ID lookup</div>
+                <div class="panel-heading-sub">
+                  Use when a QR code cannot be scanned or printed.
+                </div>
+              </div>
+            </div>
+
+            <div class="manual-section">
+              <div class="manual-title">Search by CS‑ID</div>
+              <label for="manualCsIdSuffix">CS‑ID</label>
+              <div style="display:flex; align-items:center; gap:0.4rem;">
+                <div
+                  style="
+                    padding:0.6rem 0.8rem;
+                    border-radius:999px;
+                    border:1px solid rgba(55,65,81,0.9);
+                    background:rgba(15,23,42,0.97);
+                    font-size:0.86rem;
+                    white-space:nowrap;
+                  "
+                >
+                  CS2026-
+                </div>
+                <input
+                  type="text"
+                  id="manualCsIdSuffix"
+                  maxlength="4"
+                  pattern="\d{4}"
+                  inputmode="numeric"
+                  placeholder="Last 4 digits"
+                  style="flex:1;"
+                />
+              </div>
+              <button id="manualPreviewBtn">
+                Preview student
+              </button>
+              <p class="hint">
+                Enter only the last 4 digits printed on the student’s CS‑ID.
+              </p>
+            </div>
+
+            <div id="studentDetails"></div>
+
+            <button id="markBtn" disabled>
+              Mark present
+            </button>
+          </div>
+        </section>
+      </div>
+      <!-- /teacherContent -->
+    </div>
   </div>
-
-  
-  <div id="reader"></div>
-
-  <h3>Type CS-ID</h3>
-  <input type="text" id="manualCsId" placeholder="e.g., CS2026-4213" />
-  <button id="manualPreviewBtn">Preview Student</button>
-
-  <div id="studentDetails" style="display:none;"></div>
-
-  <button id="markBtn" disabled>Mark Present</button>
-
-  <div id="result"></div>
 </body>
 </html>
