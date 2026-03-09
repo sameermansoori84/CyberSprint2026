@@ -1,4 +1,7 @@
 // public/js/register.js
+// Backend API URL (Render deployment)
+const API_BASE = "https://cybersprint2026.onrender.com";
+
 const form = document.getElementById("regForm");
 const university = document.getElementById("university");
 const course = document.getElementById("course");
@@ -94,7 +97,7 @@ form.addEventListener("submit", async (e) => {
   messageEl.className = "";
 
   try {
-    const response = await fetch("/api/students/register", {
+    const response = await fetch(`${API_BASE}/api/students/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

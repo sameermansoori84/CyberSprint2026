@@ -1,5 +1,6 @@
 // public/js/admin.js
-const API_BASE = window.location.origin; // Use same domain as frontend
+// Backend API URL (Render deployment)
+const API_BASE = "https://cybersprint2026.onrender.com";
 
 const loginSection = document.getElementById("loginSection");
 const adminContent = document.getElementById("adminContent");
