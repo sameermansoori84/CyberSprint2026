@@ -287,6 +287,45 @@
       margin-bottom: 0.25rem;
     }
 
+    /* UPI QR box (used inside form) */
+    .upi-box {
+      margin-top: 0.4rem;
+      padding: 0.8rem 0.9rem;
+      border-radius: 0.8rem;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .upi-title {
+      font-weight: 600;
+      color: #e5e7eb;
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.72rem;
+    }
+
+    .upi-row {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .upi-qr {
+      width: 96px;
+      height: 96px;
+      border-radius: 0.5rem;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: #ffffff;
+    }
+
+    .upi-text p {
+      margin: 0 0 0.25rem;
+      text-align: justify;
+    }
+
     /* Right panel: form */
     .panel {
       background: var(--bg-elevated);
@@ -553,10 +592,14 @@
         align-self: stretch;
         justify-content: center;
       }
+
+      .upi-row {
+        align-items: flex-start;
+      }
     }
   </style>
 
-  <script src="/js/register.js" defer></script>
+  <script src="js/register.js" defer></script>
 </head>
 <body>
   <div class="shell">
@@ -568,11 +611,6 @@
                alt="Bhagwan Mahavir University"
                class="logo logo-bmu">
         </div>
-        <!-- <div class="logo-wrap">
-          <img src="images/BMCCA_Logo.jpg"
-               alt="Bhagwan Mahavir College of Computer Application"
-               class="logo logo-bmcca">
-        </div> -->
         <div class="logo-wrap">
           <img src="images/Havok.png"
                alt="Havok Security"
@@ -791,6 +829,18 @@
                   required
                   placeholder="10‑digit emergency contact number"
                 />
+              </div>
+            </div>
+
+            <!-- QR box above payment reference -->
+            <div class="upi-box">
+              <div class="upi-title">UPI payment (scan &amp; pay)</div>
+              <div class="upi-row">
+                <img src="images/qr-code.jpeg" alt="UPI QR for CyberSprint payment" class="upi-qr">
+                <div class="upi-text">
+                  <p>Scan this UPI QR code to pay the registration fee.</p>
+                  <p>Then enter the UPI reference / UTR ID in the field below.</p>
+                </div>
               </div>
             </div>
 
