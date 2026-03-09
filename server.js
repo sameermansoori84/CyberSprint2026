@@ -42,7 +42,7 @@ mongoose
   });
 
 app.get("/", (req, res) => {
-  res.send("<h1>CyberSprint 2026 Backend is Running</h1>");
+  res.sendFile(__dirname + "/public/index.html");
 });
 
 app.listen(PORT, "0.0.0.0", () => {

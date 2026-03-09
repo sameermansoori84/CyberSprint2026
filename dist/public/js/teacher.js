@@ -1,7 +1,7 @@
 // public/js/teacher.js
 
 // CHANGE this to your Render backend URL in production
-const API_BASE = "";
+const API_BASE = "https://cybersprint2026.onrender.com";
 
 document.addEventListener("DOMContentLoaded", () => {
   // ------- DOM references -------

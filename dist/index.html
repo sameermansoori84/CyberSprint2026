@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CyberSprint 2026 - Home</title>
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-elevated: rgba(15, 23, 42, 0.9);
+      --border-subtle: rgba(148, 163, 184, 0.5);
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.18);
+      --accent-alt: #0ea5e9;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --danger: #f97373;
+      --radius-lg: 18px;
+      --radius-md: 10px;
+      --shadow-soft: 0 0 40px rgba(15, 23, 42, 0.8);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top, #0f172a 0, #020617 50%, #000 100%),
+        url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23022c22' stop-opacity='0.35' offset='0'/%3E%3Cstop stop-color='%23022c22' stop-opacity='0' offset='1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='160' height='160' fill='none'/%3E%3Cpath d='M0 40h160M0 80h160M0 120h160M40 0v160M80 0v160M120 0v160' stroke='url(%23g)' stroke-width='0.6'/%3E%3C/svg%3E")
+          center / 260px repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      text-align: center;
+    }
+
+    .brand-header {
+      margin-bottom: 3rem;
+      padding: 1.5rem 2rem;
+      border-radius: 24px;
+      background: radial-gradient(circle at top left, #0f172a 0, #020617 60%);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 0 60px rgba(15, 23, 42, 0.85);
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4rem;
+      flex-wrap: wrap;
+    }
+
+    .logo-wrap {
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+    }
+
+    .logo {
+      max-height: 100px;
+      height: auto;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    .logo-bmu-wrap {
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: #ffffff;
+      box-shadow: 0 0 10px rgba(15, 23, 42, 0.8);
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      margin: 0 0 1rem;
+      background: linear-gradient(135deg, #a5b4fc 0%, #22c55e 50%, #0ea5e9 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 40px rgba(129, 140, 248, 0.5);
+    }
+
+    .subtitle {
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      color: var(--text-muted);
+      margin: 0 auto 3rem;
+      max-width: 700px;
+      line-height: 1.6;
+    }
+
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .nav-card {
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      background: var(--bg-elevated);
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      box-shadow: var(--shadow-soft);
+      text-decoration: none;
+      color: inherit;
+      transition: all 200ms ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.08) 0, transparent 65%);
+      opacity: 0;
+      transition: opacity 200ms ease;
+    }
+
+    .nav-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(56, 189, 248, 0.8);
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.4);
+    }
+
+    .nav-card:hover::before {
+      opacity: 1;
+    }
+
+    .nav-card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0 0 0.75rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav-card-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(45, 212, 191, 0.45);
+      background: linear-gradient(90deg, rgba(34, 197, 94, 0.16), rgba(8, 47, 73, 0.7));
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #a5f3fc;
+      margin-bottom: 2rem;
+    }
+
+    .badge-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #bef264 0, #22c55e 35%, #166534 65%);
+      box-shadow: 0 0 12px rgba(132, 204, 22, 0.9);
+    }
+
+    @media (max-width: 768px) {
+      .brand-row {
+        gap: 2rem;
+      }
+      
+      .logo {
+        max-height: 70px;
+      }
+
+      .nav-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="brand-header">
+      <div class="brand-row">
+        <div class="logo-wrap logo-bmu-wrap">
+          <img src="images/BMU_LOGO.png" alt="Bhagwan Mahavir University" class="logo">
+        </div>
+        <div class="logo-wrap">
+          <img src="images/Havok.png" alt="Havok Security" class="logo">
+        </div>
+      </div>
+    </div>
+
+    <div class="badge">
+      <div class="badge-dot"></div>
+      CYBERSPRINT 2026 · PORTAL
+    </div>
+
+    <h1>CyberSprint 2026</h1>
+    <p class="subtitle">
+      Welcome to CyberSprint 2026 - A comprehensive cyber security workshop and CTF event. 
+      Choose your portal below to get started.
+    </p>
+
+    <div class="nav-grid">
+      <a href="register.html" class="nav-card">
+        <h2 class="nav-card-title">Student Registration</h2>
+        <p class="nav-card-desc">
+          Register for the CyberSprint 2026 event. Fill in your details and get your QR pass.
+        </p>
+      </a>
+
+      <a href="teacher.html" class="nav-card">
+        <h2 class="nav-card-title">Teacher Portal</h2>
+        <p class="nav-card-desc">
+          Access the teacher dashboard to manage students and track attendance.
+        </p>
+      </a>
+
+      <a href="admin.html" class="nav-card">
+        <h2 class="nav-card-title">Admin Panel</h2>
+        <p class="nav-card-desc">
+          Administrative access for event management and system configuration.
+        </p>
+      </a>
+    </div>
+  </div>
+</body>
+</html>
