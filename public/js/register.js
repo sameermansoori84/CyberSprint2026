@@ -1,6 +1,6 @@
 // public/js/register.js
 // Backend API URL (Render deployment)
-const API_BASE = "https://cybersprint2026.onrender.com";
+const API_BASE = "https://cybersprint2026-ob49.onrender.com";
 
 const form = document.getElementById("regForm");
 const university = document.getElementById("university");

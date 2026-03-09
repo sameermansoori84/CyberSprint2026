@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 const corsOptions = {
   origin: [
     'https://animated-choux-2ca6b0.netlify.app',
-    'https://exquisite-gumdrop-cd8de5.netlify.app',
+    'https://cute-concha-90eaf1.netlify.app/',
     'http://localhost:3000',
     'http://localhost:5000'
   ],
