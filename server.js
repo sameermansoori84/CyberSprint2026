@@ -63,24 +63,16 @@ mongoose
     // Optional ping, similar to MongoClient example
     await mongoose.connection.db.admin().command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
+    // Start server only after successful DB connection
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`CyberSprint 2026 backend running on http://localhost:${PORT}`);
+    });
   })
   .catch((err) => {
     console.error("MongoDB connection error:", err);
+    process.exit(1); // Exit if DB connection fails
   });
-
-// Serve index.html for root route
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
-// Catch-all route for HTML pages
-app.get("*.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", req.path));
-});
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`CyberSprint 2026 backend running on http://localhost:${PORT}`);
-});
 
 // Export for Vercel
 module.exports = app;
