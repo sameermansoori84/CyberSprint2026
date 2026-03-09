@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - CyberSprint 2026</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #00ff00;
+        }
+        .test {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #333;
+            background: #0a0a0a;
+        }
+        .success { color: #00ff00; }
+        .error { color: #ff0000; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            background: #333;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+        }
+        pre {
+            background: #000;
+            padding: 10px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 CyberSprint 2026 - Debug Page</h1>
+    
+    <div class="test">
+        <h2>1. Current URL Info</h2>
+        <pre id="urlInfo"></pre>
+    </div>
+
+    <div class="test">
+        <h2>2. Test API Endpoints</h2>
+        <button onclick="testHealth()">Test /api/health</button>
+        <button onclick="testAuth()">Test /api/auth/login</button>
+        <button onclick="testStudents()">Test /api/students</button>
+        <pre id="apiResults"></pre>
+    </div>
+
+    <div class="test">
+        <h2>3. Network Test</h2>
+        <button onclick="testCORS()">Test CORS</button>
+        <pre id="corsResults"></pre>
+    </div>
+
+    <script>
+        // Display URL info
+        document.getElementById('urlInfo').textContent = JSON.stringify({
+            origin: window.location.origin,
+            hostname: window.location.hostname,
+            protocol: window.location.protocol,
+            port: window.location.port
+        }, null, 2);
+
+        const API_BASE = window.location.origin;
+
+        async function testHealth() {
+            const results = document.getElementById('apiResults');
+            results.textContent = 'Testing /api/health...\n';
+            
+            try {
+                const res = await fetch(`${API_BASE}/api/health`);
+                const data = await res.json();
+                results.textContent += `✅ SUCCESS (${res.status})\n`;
+                results.textContent += JSON.stringify(data, null, 2);
+                results.className = 'success';
+            } catch (error) {
+                results.textContent += `❌ ERROR\n${error.message}`;
+                results.className = 'error';
+            }
+        }
+
+        async function testAuth() {
+            const results = document.getElementById('apiResults');
+            results.textContent = 'Testing /api/auth/login...\n';
+            
+            try {
+                const res = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: 'test' })
+                });
+                const data = await res.json();
+                results.textContent += `Response (${res.status}):\n`;
+                results.textContent += JSON.stringify(data, null, 2);
+                results.className = res.ok ? 'success' : 'error';
+            } catch (error) {
+                results.textContent += `❌ ERROR\n${error.message}`;
+                results.className = 'error';
+            }
+        }
+
+        async function testStudents() {
+            const results = document.getElementById('apiResults');
+            results.textContent = 'Testing /api/students...\n';
+            
+            try {
+                const res = await fetch(`${API_BASE}/api/students`);
+                const text = await res.text();
+                results.textContent += `Response (${res.status}):\n${text}`;
+                results.className = res.ok ? 'success' : 'error';
+            } catch (error) {
+                results.textContent += `❌ ERROR\n${error.message}`;
+                results.className = 'error';
+            }
+        }
+
+        async function testCORS() {
+            const results = document.getElementById('corsResults');
+            results.textContent = 'Testing CORS...\n';
+            
+            try {
+                const res = await fetch(`${API_BASE}/api/health`, {
+                    method: 'OPTIONS'
+                });
+                results.textContent += `✅ CORS Preflight OK (${res.status})\n`;
+                results.textContent += 'Headers:\n';
+                res.headers.forEach((value, key) => {
+                    results.textContent += `${key}: ${value}\n`;
+                });
+                results.className = 'success';
+            } catch (error) {
+                results.textContent += `❌ CORS ERROR\n${error.message}`;
+                results.className = 'error';
+            }
+        }
+    </script>
+</body>
+</html>

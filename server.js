@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -10,13 +11,25 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static("public"));
+
+// Static files - serve from public directory
+app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 app.use("/api/students", require("./routes/student"));
 app.use("/api/attendance", require("./routes/attendance"));
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/admin", require("./routes/admin"));
+
+// Health check endpoint
+app.get("/api/health", (req, res) => {
+  res.json({ 
+    success: true, 
+    message: "API is working!",
+    mongodb: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+    timestamp: new Date().toISOString()
+  });
+});
 
 // MongoDB connection (Mongoose using your Atlas URI)
 const mongoUri = process.env.MONGO_URI;
@@ -41,10 +54,19 @@ mongoose
     console.error("MongoDB connection error:", err);
   });
 
+// Serve index.html for root route
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// Catch-all route for HTML pages
+app.get("*.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", req.path));
 });
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`CyberSprint 2026 backend running on http://localhost:${PORT}`);
 });
+
+// Export for Vercel
+module.exports = app;

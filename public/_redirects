@@ -1,0 +1,7 @@
+# API routes to serverless functions
+/api/*  /.netlify/functions/server/:splat  200
+
+# Pretty URLs - remove .html extension
+/register  /register.html  200
+/teacher  /teacher.html  200
+/admin  /admin.html  200
