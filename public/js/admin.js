@@ -41,7 +41,7 @@ loginBtn.addEventListener("click", async () => {
   try {
     const res = await fetch(`${API_BASE}/api/auth/login`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
     });
     const data = await res.json();
