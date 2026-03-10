@@ -1,7 +1,8 @@
 // public/js/teacher.js
 
 // Backend API URL (Render deployment)
-const API_BASE = "https://cybersprint2026.onrender.com";
+// const API_BASE = "http://localhost:5000";
+const API_BASE = "https://cybersprint2026-ob49.onrender.com";
 
 document.addEventListener("DOMContentLoaded", () => {
   // ------- DOM references -------

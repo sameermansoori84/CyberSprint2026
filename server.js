@@ -10,12 +10,14 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware - CORS configuration for cross-origin requests
 const corsOptions = {
-  origin: [
-    'https://animated-choux-2ca6b0.netlify.app',
-    'https://cute-concha-90eaf1.netlify.app/',
-    'http://localhost:3000',
-    'http://localhost:5000'
-  ],
+  // origin: [
+  //   'https://cybersprint2026.onrender.com/',
+  //   'https://animated-choux-2ca6b0.netlify.app',
+  //   'https://cute-concha-90eaf1.netlify.app/',
+  //   'http://localhost:3000',
+  //   'http://localhost:5000'
+  // ],
+  origin: '*',
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -23,7 +25,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Handle preflight requests
+// app.options('*', cors(corsOptions)); // Handle preflight requests
 app.use(express.json());
 
 // Static files - serve from public directory
