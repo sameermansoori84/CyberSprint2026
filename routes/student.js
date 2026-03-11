@@ -81,5 +81,63 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+// GET /students/by-email?email=test@example.com
+router.get("/sendEmail", async (req, res) => {
+  try {
+    const { email } = req.query;
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email query parameter is required",
+      });
+    }
+
+    const student = await Student.findOne({ email: email.trim() });
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found for this email",
+      });
+    }
+
+    // 1) Generate QR for CS-ID
+    let qrBuffer;
+    try {
+      qrBuffer = await generateQrBuffer(student.csId);
+      console.log("QR generated for", student.csId);
+    } catch (qrErr) {
+      console.error("QR generation failed:", qrErr.message);
+      // You can decide: continue without email, or fail.
+    }
+
+    // 2) Send confirmation email with QR (if QR generated and email config present)
+    try {
+      const fullName = `${student.firstName} ${student.lastName}`.trim();
+      await sendRegistrationEmail({
+        to: student.email,
+        name: fullName,
+        csId: student.csId,
+        event: student.event,
+        qrBuffer, // can be undefined if QR failed
+      });
+      console.log("Email sent to", student.email);
+    } catch (mailErr) {
+      console.error("Email sending failed:", mailErr.message);
+      // Don't block registration just because email failed
+    }
+    res.json({
+      success: true,
+      student,
+    });
+  } catch (error) {
+    console.error("Get student by email error:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Server error",
+    });
+  }
+});
+
 
 module.exports = router;

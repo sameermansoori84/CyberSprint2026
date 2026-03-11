@@ -1,620 +1,633 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>CyberSprint 2026 – Admin Panel</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <head>
+    <meta charset="UTF-8" />
+    <title>CyberSprint 2026 – Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <style>
-    :root {
-      --bg: #020617;
-      --bg-elevated: rgba(15, 23, 42, 0.96);
-      --border-subtle: rgba(148, 163, 184, 0.5);
-      --accent: #22c55e;
-      --accent-alt: #0ea5e9;
-      --text-main: #e5e7eb;
-      --text-muted: #9ca3af;
-      --radius-lg: 18px;
-      --radius-md: 10px;
-    }
+    <style>
+      :root {
+        --bg: #020617;
+        --bg-elevated: rgba(15, 23, 42, 0.96);
+        --border-subtle: rgba(148, 163, 184, 0.5);
+        --accent: #22c55e;
+        --accent-alt: #0ea5e9;
+        --text-main: #e5e7eb;
+        --text-muted: #9ca3af;
+        --radius-lg: 18px;
+        --radius-md: 10px;
+      }
 
-    * {
-      box-sizing: border-box;
-    }
+      * {
+        box-sizing: border-box;
+      }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-      color: var(--text-main);
-      background:
-        radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%),
-        url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23022c22' stop-opacity='0.35' offset='0'/%3E%3Cstop stop-color='%23022c22' stop-opacity='0' offset='1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='160' height='160' fill='none'/%3E%3Cpath d='M0 40h160M0 80h160M0 120h160M40 0v160M80 0v160M120 0v160' stroke='url(%23g)' stroke-width='0.6'/%3E%3C/svg%3E")
-          center / 260px repeat;
-      padding: 20px 12px 32px;
-      display: flex;
-      justify-content: center;
-    }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        color: var(--text-main);
+        background:
+          radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%),
+          url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23022c22' stop-opacity='0.35' offset='0'/%3E%3Cstop stop-color='%23022c22' stop-opacity='0' offset='1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='160' height='160' fill='none'/%3E%3Cpath d='M0 40h160M0 80h160M0 120h160M40 0v160M80 0v160M120 0v160' stroke='url(%23g)' stroke-width='0.6'/%3E%3C/svg%3E")
+            center / 260px repeat;
+        padding: 20px 12px 32px;
+        display: flex;
+        justify-content: center;
+      }
 
-    .container {
-      width: 100%;
-      max-width: 1180px;
-    }
+      .container {
+        width: 100%;
+        max-width: 1180px;
+      }
 
-    .top-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 1.2rem;
-    }
-
-    .top-title {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.18rem 0.85rem 0.18rem 0.25rem;
-      border-radius: 999px;
-      border: 1px solid rgba(56, 189, 248, 0.55);
-      background: linear-gradient(
-        90deg,
-        rgba(34, 197, 94, 0.18),
-        rgba(8, 47, 73, 0.7)
-      );
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #bae6fd;
-    }
-
-    .badge-dot {
-      width: 16px;
-      height: 16px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #facc15 0, #22c55e 45%, #166534 80%);
-      box-shadow: 0 0 16px rgba(132, 204, 22, 0.9);
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 1.6rem;
-      letter-spacing: 0.03em;
-    }
-
-    h1 span {
-      color: #a5b4fc;
-      text-shadow:
-        0 0 15px rgba(129, 140, 248, 0.7),
-        0 0 26px rgba(37, 99, 235, 0.55);
-    }
-
-    .subtitle {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
-    .meta-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-      font-size: 0.76rem;
-      color: var(--text-muted);
-    }
-
-    .meta-pill {
-      padding: 0.35rem 0.7rem;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: rgba(15, 23, 42, 0.9);
-    }
-
-    .status-indicator {
-      font-size: 0.75rem;
-      padding: 0.27rem 0.7rem;
-      border-radius: 999px;
-      border: 1px solid rgba(52, 211, 153, 0.8);
-      background: rgba(22, 163, 74, 0.16);
-      color: #bbf7d0;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      white-space: nowrap;
-    }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 9px rgba(34, 197, 94, 0.95);
-    }
-
-    @media (max-width: 720px) {
       .top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.2rem;
+      }
+
+      .top-title {
+        display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        gap: 0.3rem;
       }
-    }
 
-    .card {
-      background: var(--bg-elevated);
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      padding: 1rem 1.1rem 1.3rem;
-      margin-bottom: 1rem;
-      position: relative;
-      overflow: hidden;
-    }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.18rem 0.85rem 0.18rem 0.25rem;
+        border-radius: 999px;
+        border: 1px solid rgba(56, 189, 248, 0.55);
+        background: linear-gradient(
+          90deg,
+          rgba(34, 197, 94, 0.18),
+          rgba(8, 47, 73, 0.7)
+        );
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #bae6fd;
+      }
 
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: -40%;
-      background:
-        radial-gradient(circle at top, rgba(56, 189, 248, 0.06) 0, transparent 60%),
-        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.05) 0, transparent 60%);
-      opacity: 0.7;
-      pointer-events: none;
-    }
+      .badge-dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
+        background: radial-gradient(
+          circle at 30% 20%,
+          #facc15 0,
+          #22c55e 45%,
+          #166534 80%
+        );
+        box-shadow: 0 0 16px rgba(132, 204, 22, 0.9);
+      }
 
-    .card-inner {
-      position: relative;
-      z-index: 1;
-    }
+      h1 {
+        margin: 0;
+        font-size: 1.6rem;
+        letter-spacing: 0.03em;
+      }
 
-    .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-      margin-bottom: 0.7rem;
-    }
+      h1 span {
+        color: #a5b4fc;
+        text-shadow:
+          0 0 15px rgba(129, 140, 248, 0.7),
+          0 0 26px rgba(37, 99, 235, 0.55);
+      }
 
-    .card-title {
-      font-size: 1rem;
-      font-weight: 600;
-    }
+      .subtitle {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+      }
 
-    .card-subtitle {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
+      .meta-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        font-size: 0.76rem;
+        color: var(--text-muted);
+      }
 
-    .login-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      align-items: center;
-      font-size: 0.86rem;
-    }
+      .meta-pill {
+        padding: 0.35rem 0.7rem;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        background: rgba(15, 23, 42, 0.9);
+      }
 
-    label {
-      font-weight: 500;
-      font-size: 0.8rem;
-      color: #d1d5db;
-    }
+      .status-indicator {
+        font-size: 0.75rem;
+        padding: 0.27rem 0.7rem;
+        border-radius: 999px;
+        border: 1px solid rgba(52, 211, 153, 0.8);
+        background: rgba(22, 163, 74, 0.16);
+        color: #bbf7d0;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        white-space: nowrap;
+      }
 
-    input,
-    select {
-      padding: 0.5rem 0.65rem;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(55, 65, 81, 0.95);
-      background: rgba(15, 23, 42, 0.97);
-      color: var(--text-main);
-      font-size: 0.86rem;
-      outline: none;
-      transition:
-        border-color 120ms ease,
-        box-shadow 120ms ease,
-        background 120ms ease,
-        transform 80ms ease;
-    }
+      .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #22c55e;
+        box-shadow: 0 0 9px rgba(34, 197, 94, 0.95);
+      }
 
-    input:focus,
-    select:focus {
-      border-color: rgba(56, 189, 248, 0.95);
-      box-shadow:
-        0 0 0 1px rgba(37, 99, 235, 0.6),
-        0 0 0 3px rgba(37, 99, 235, 0.25);
-      background: rgba(15, 23, 42, 1);
-      transform: translateY(-1px);
-    }
+      @media (max-width: 720px) {
+        .top-bar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
 
-    input[type="text"]#eventInput {
-      min-width: 190px;
-    }
+      .card {
+        background: var(--bg-elevated);
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        padding: 1rem 1.1rem 1.3rem;
+        margin-bottom: 1rem;
+        position: relative;
+        overflow: hidden;
+      }
 
-    button,
-    .btn {
-      border: none;
-      cursor: pointer;
-      border-radius: 999px;
-      padding: 0.5rem 1.1rem;
-      font-size: 0.8rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: linear-gradient(90deg, #22c55e, #0ea5e9);
-      color: #020617;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      margin-right: 0.35rem;
-      margin-top: 0.25rem;
-      transition:
-        transform 80ms ease,
-        box-shadow 120ms ease,
-        filter 120ms ease;
-    }
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: -40%;
+        background:
+          radial-gradient(
+            circle at top,
+            rgba(56, 189, 248, 0.06) 0,
+            transparent 60%
+          ),
+          radial-gradient(
+            circle at bottom right,
+            rgba(34, 197, 94, 0.05) 0,
+            transparent 60%
+          );
+        opacity: 0.7;
+        pointer-events: none;
+      }
 
-    button:hover,
-    .btn:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-      box-shadow:
-        0 0 18px rgba(56, 189, 248, 0.7),
-        0 0 30px rgba(34, 197, 94, 0.7);
-    }
+      .card-inner {
+        position: relative;
+        z-index: 1;
+      }
 
-    .btn-secondary {
-      background: rgba(15, 23, 42, 0.95);
-      color: var(--text-main);
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      text-transform: none;
-      letter-spacing: 0.02em;
-    }
+      .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 0.7rem;
+      }
 
-    .btn-secondary:hover {
-      box-shadow: 0 0 18px rgba(148, 163, 184, 0.55);
-    }
+      .card-title {
+        font-size: 1rem;
+        font-weight: 600;
+      }
 
-    #loginMessage {
-      font-size: 0.8rem;
-      margin-left: 0.4rem;
-    }
+      .card-subtitle {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
 
-    #loginSection {
-      margin-bottom: 1rem;
-    }
+      .login-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        align-items: center;
+        font-size: 0.86rem;
+      }
 
-    #adminContent {
-      display: none;
-    }
+      label {
+        font-weight: 500;
+        font-size: 0.8rem;
+        color: #d1d5db;
+      }
 
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
+      input,
+      select {
+        padding: 0.5rem 0.65rem;
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(55, 65, 81, 0.95);
+        background: rgba(15, 23, 42, 0.97);
+        color: var(--text-main);
+        font-size: 0.86rem;
+        outline: none;
+        transition:
+          border-color 120ms ease,
+          box-shadow 120ms ease,
+          background 120ms ease,
+          transform 80ms ease;
+      }
 
-    @media (max-width: 900px) {
+      input:focus,
+      select:focus {
+        border-color: rgba(56, 189, 248, 0.95);
+        box-shadow:
+          0 0 0 1px rgba(37, 99, 235, 0.6),
+          0 0 0 3px rgba(37, 99, 235, 0.25);
+        background: rgba(15, 23, 42, 1);
+        transform: translateY(-1px);
+      }
+
+      input[type="text"]#eventInput {
+        min-width: 190px;
+      }
+
+      button,
+      .btn {
+        border: none;
+        cursor: pointer;
+        border-radius: 999px;
+        padding: 0.5rem 1.1rem;
+        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: linear-gradient(90deg, #22c55e, #0ea5e9);
+        color: #020617;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-right: 0.35rem;
+        margin-top: 0.25rem;
+        transition:
+          transform 80ms ease,
+          box-shadow 120ms ease,
+          filter 120ms ease;
+      }
+
+      button:hover,
+      .btn:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.05);
+        box-shadow:
+          0 0 18px rgba(56, 189, 248, 0.7),
+          0 0 30px rgba(34, 197, 94, 0.7);
+      }
+
+      .btn-secondary {
+        background: rgba(15, 23, 42, 0.95);
+        color: var(--text-main);
+        border: 1px solid rgba(148, 163, 184, 0.7);
+        text-transform: none;
+        letter-spacing: 0.02em;
+      }
+
+      .btn-secondary:hover {
+        box-shadow: 0 0 18px rgba(148, 163, 184, 0.55);
+      }
+
+      #loginMessage {
+        font-size: 0.8rem;
+        margin-left: 0.4rem;
+      }
+
+      #loginSection {
+        margin-bottom: 1rem;
+      }
+
+      #adminContent {
+        display: none;
+      }
+
       .grid {
-        grid-template-columns: minmax(0, 1fr);
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+        gap: 1rem;
+        margin-bottom: 1rem;
       }
-    }
 
-    .summary-box {
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      background: rgba(15, 23, 42, 0.96);
-      padding: 0.8rem 0.9rem;
-      font-size: 0.85rem;
-    }
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
 
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.6rem;
-      margin-top: 0.5rem;
-      font-size: 0.8rem;
-    }
+      .summary-box {
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(148, 163, 184, 0.6);
+        background: rgba(15, 23, 42, 0.96);
+        padding: 0.8rem 0.9rem;
+        font-size: 0.85rem;
+      }
 
-    @media (max-width: 720px) {
       .summary-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.6rem;
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
       }
-    }
 
-    .summary-item {
-      border-radius: 0.9rem;
-      border: 1px solid rgba(55, 65, 81, 0.95);
-      padding: 0.55rem 0.6rem;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.95), #020617);
-    }
+      @media (max-width: 720px) {
+        .summary-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
 
-    .summary-label {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 0.25rem;
-    }
+      .summary-item {
+        border-radius: 0.9rem;
+        border: 1px solid rgba(55, 65, 81, 0.95);
+        padding: 0.55rem 0.6rem;
+        background: radial-gradient(
+          circle at top,
+          rgba(15, 23, 42, 0.95),
+          #020617
+        );
+      }
 
-    .summary-value {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #e5e7eb;
-    }
+      .summary-label {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.25rem;
+      }
 
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-      margin-bottom: 0.4rem;
-    }
+      .summary-value {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #e5e7eb;
+      }
 
-    .section-title {
-      font-size: 0.96rem;
-      font-weight: 600;
-    }
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 0.4rem;
+      }
 
-    .section-sub {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
+      .section-title {
+        font-size: 0.96rem;
+        font-weight: 600;
+      }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 0.5rem;
-      font-size: 0.8rem;
-      border-radius: var(--radius-md);
-      overflow: hidden;
-    }
+      .section-sub {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
 
-    th,
-    td {
-      border: 1px solid rgba(31, 41, 55, 0.95);
-      padding: 0.45rem 0.55rem;
-      text-align: left;
-    }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+      }
 
-    th {
-      background: rgba(15, 23, 42, 0.98);
-      color: #cbd5f5;
-      font-weight: 600;
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
+      th,
+      td {
+        border: 1px solid rgba(31, 41, 55, 0.95);
+        padding: 0.45rem 0.55rem;
+        text-align: left;
+      }
 
-    tbody tr:nth-child(even) {
-      background: rgba(15, 23, 42, 0.96);
-    }
+      th {
+        background: rgba(15, 23, 42, 0.98);
+        color: #cbd5f5;
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
 
-    tbody tr:nth-child(odd) {
-      background: rgba(15, 23, 42, 0.9);
-    }
+      tbody tr:nth-child(even) {
+        background: rgba(15, 23, 42, 0.96);
+      }
 
-    tbody tr:hover {
-      background: rgba(30, 64, 175, 0.4);
-    }
+      tbody tr:nth-child(odd) {
+        background: rgba(15, 23, 42, 0.9);
+      }
 
-    .table-wrapper {
-      margin-top: 0.4rem;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(31, 41, 55, 0.95);
-      overflow: auto;
-      max-height: 420px;
-      background: rgba(15, 23, 42, 0.98);
-    }
+      tbody tr:hover {
+        background: rgba(30, 64, 175, 0.4);
+      }
 
-    #daySelect {
-      min-width: 130px;
-      font-size: 0.8rem;
-    }
-  </style>
+      .table-wrapper {
+        margin-top: 0.4rem;
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(31, 41, 55, 0.95);
+        overflow: auto;
+        max-height: 420px;
+        background: rgba(15, 23, 42, 0.98);
+      }
 
-  <script src="/js/admin.js" defer></script>
-</head>
-<body>
-  <div class="container">
-    <header class="top-bar">
-      <div class="top-title">
-        <div class="badge">
-          <div class="badge-dot"></div>
-          CyberSprint 2026 · Admin console
-        </div>
-        <h1>
-          Event <span>Command Center</span>
-        </h1>
-        <p class="subtitle">
-          Monitor registrations, track attendance across days, and export
-          structured reports for CyberSprint 2026.
-        </p>
-        <div class="meta-strip">
-          <div class="meta-pill">Secure backend · Restricted access</div>
-          <div class="meta-pill">Live counts · CSV exports</div>
-        </div>
-      </div>
-      <div class="status-indicator">
-        <span class="status-dot"></span>
-        Admin channel secure
-      </div>
-    </header>
+      #daySelect {
+        min-width: 130px;
+        font-size: 0.8rem;
+      }
+    </style>
 
-    <section id="loginSection" class="card">
-      <div class="card-inner">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Admin login</div>
-            <div class="card-subtitle">
-              Use the administrator password shared by the event coordinator.
-            </div>
+    <script src="/js/admin.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <header class="top-bar">
+        <div class="top-title">
+          <div class="badge">
+            <div class="badge-dot"></div>
+            CyberSprint 2026 · Admin console
+          </div>
+          <h1>Event <span>Command Center</span></h1>
+          <p class="subtitle">
+            Monitor registrations, track attendance across days, and export
+            structured reports for CyberSprint 2026.
+          </p>
+          <div class="meta-strip">
+            <div class="meta-pill">Secure backend · Restricted access</div>
+            <div class="meta-pill">Live counts · CSV exports</div>
           </div>
         </div>
-        <div class="login-row">
-          <div>
-            <label for="adminPassword">Password</label><br />
-            <input type="password" id="adminPassword" />
-          </div>
-          <button class="btn" id="loginBtn">Login</button>
-          <span id="loginMessage"></span>
+        <div class="status-indicator">
+          <span class="status-dot"></span>
+          Admin channel secure
         </div>
-      </div>
-    </section>
+      </header>
 
-    <div id="adminContent">
-      <section class="card">
+      <section id="loginSection" class="card">
         <div class="card-inner">
           <div class="card-header">
             <div>
-              <div class="card-title">Event selection</div>
+              <div class="card-title">Admin login</div>
               <div class="card-subtitle">
-                Refresh metrics and tables for the chosen event.
+                Use the administrator password shared by the event coordinator.
               </div>
             </div>
           </div>
           <div class="login-row">
             <div>
-              <label for="eventInput">Event</label><br />
-              <input type="text" id="eventInput" value="CyberSprint 2026" />
+              <label for="adminPassword">Password</label><br />
+              <input type="password" id="adminPassword" />
             </div>
-            <button class="btn-secondary" id="refreshBtn">
-              Refresh
-            </button>
+            <button class="btn" id="loginBtn">Login</button>
+            <span id="loginMessage"></span>
           </div>
         </div>
       </section>
 
-      <section class="grid">
-        <div class="card">
+      <div id="adminContent">
+        <section class="card">
           <div class="card-inner">
             <div class="card-header">
               <div>
-                <div class="card-title">Summary</div>
+                <div class="card-title">Event selection</div>
                 <div class="card-subtitle">
-                  Live overview of registrations and attendance.
+                  Refresh metrics and tables for the chosen event.
                 </div>
-              </div>
-            </div>
-            <div id="summaryBox" class="summary-box">
-              Loading summary...
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="card-inner">
-          <div class="section-header">
-            <div>
-              <div class="section-title">Registrations</div>
-              <div class="section-sub">
-                View all participants and export for record‑keeping.
-              </div>
-            </div>
-            <div>
-              <button class="btn-secondary" id="loadRegistrationsBtn">
-                Load table
-              </button>
-              <button class="btn" id="downloadRegistrationsCsvBtn">
-                Download CSV
-              </button>
-            </div>
-          </div>
-
-          <div class="table-wrapper">
-            <table id="registrationsTable">
-              <thead>
-                <tr>
-                  <th>CS‑ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>WhatsApp</th>
-                  <th>University</th>
-                  <th>College</th>
-                  <th>Course / Year</th>
-                  <th>Registered at</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-      <section class="card">
-        <div class="card-inner">
-          <div class="section-header">
-            <div>
-              <div class="section-title">Attendance</div>
-              <div class="section-sub">
-                Filter by day and export attendance logs.
               </div>
             </div>
             <div class="login-row">
               <div>
-                <label for="daySelect">Day</label><br />
-                <select id="daySelect">
-                  <option value="">All days</option>
-                  <option value="Day 1">Day 1 (12 March)</option>
-                  <option value="Day 2">Day 2 (13 March)</option>
-                  <option value="Day 3">Day 3 (14 March)</option>
-                </select>
+                <label for="eventInput">Event</label><br />
+                <input type="text" id="eventInput" value="CyberSprint 2026" />
               </div>
-              <button class="btn-secondary" id="loadAttendanceBtn">
-                Load table
-              </button>
-              <button class="btn" id="downloadAttendanceCsvBtn">
-                Download CSV
-              </button>
+              <button class="btn-secondary" id="refreshBtn">Refresh</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid">
+          <div class="card">
+            <div class="card-inner">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">Summary</div>
+                  <div class="card-subtitle">
+                    Live overview of registrations and attendance.
+                  </div>
+                </div>
+              </div>
+              <div id="summaryBox" class="summary-box">Loading summary...</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-inner">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Registrations</div>
+                <div class="section-sub">
+                  View all participants and export for record‑keeping.
+                </div>
+              </div>
+              <div>
+                <button class="btn-secondary" id="loadRegistrationsBtn">
+                  Load table
+                </button>
+                <button class="btn" id="downloadRegistrationsCsvBtn">
+                  Download CSV
+                </button>
+              </div>
             </div>
 
             <div class="table-wrapper">
-              <table id="attendanceTable">
+              <table id="registrationsTable">
                 <thead>
                   <tr>
                     <th>CS‑ID</th>
-                    <th>Event</th>
-                    <th>Day</th>
-                    <th>Status</th>
-                    <th>Scan time</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>WhatsApp</th>
+                    <th>University</th>
+                    <th>College</th>
+                    <th>Course / Year</th>
+                    <th>Registered at</th>
                   </tr>
                 </thead>
                 <tbody></tbody>
               </table>
             </div>
           </div>
-        </div>
-      </section>
-      <section class="card">
-  <div class="card-inner">
-    <div class="card-header">
-      <div>
-        <div class="card-title">Notify participant</div>
-        <div class="card-subtitle">
-          Enter a participant email to send an update or reminder.
-        </div>
+        </section>
+        <section class="card">
+          <div class="card-inner">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Attendance</div>
+                <div class="section-sub">
+                  Filter by day and export attendance logs.
+                </div>
+              </div>
+              <div class="login-row">
+                <div>
+                  <label for="daySelect">Day</label><br />
+                  <select id="daySelect">
+                    <option value="">All days</option>
+                    <option value="Day 1">Day 1 (12 March)</option>
+                    <option value="Day 2">Day 2 (13 March)</option>
+                    <option value="Day 3">Day 3 (14 March)</option>
+                  </select>
+                </div>
+                <button class="btn-secondary" id="loadAttendanceBtn">
+                  Load table
+                </button>
+                <button class="btn" id="downloadAttendanceCsvBtn">
+                  Download CSV
+                </button>
+              </div>
+
+              <div class="table-wrapper">
+                <table id="attendanceTable">
+                  <thead>
+                    <tr>
+                      <th>CS‑ID</th>
+                      <th>Event</th>
+                      <th>Day</th>
+                      <th>Status</th>
+                      <th>Scan time</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="card">
+          <div class="card-inner">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Notify participant</div>
+                <div class="card-subtitle">
+                  Enter a participant email to send an update or reminder.
+                </div>
+              </div>
+            </div>
+
+            <div class="login-row">
+              <div>
+                <label for="notifyEmail">Email</label><br />
+                <input
+                  type="email"
+                  id="notifyEmail"
+                  placeholder="participant@example.com"
+                />
+              </div>
+              <button class="btn" id="notifySendBtn">Send</button>
+            </div>
+            <span id="notifyMessage"></span>
+          </div>
+        </section>
       </div>
     </div>
-
-    <div class="login-row">
-      <div>
-        abel for="notifyEmail">Email</label><br />
-        <input
-          type="email"
-          id="notifyEmail"
-          placeholder="participant@example.com"
-        />
-      </div>
-      <button class="btn" id="notifySendBtn">
-        Send
-      </button>
-    </div>
-  </div>
-</section>
-
-    </div>
-  </div>
-</body>
+  </body>
 </html>

@@ -14,13 +14,23 @@ const summaryBox = document.getElementById("summaryBox");
 const refreshBtn = document.getElementById("refreshBtn");
 
 const loadRegistrationsBtn = document.getElementById("loadRegistrationsBtn");
-const downloadRegistrationsCsvBtn = document.getElementById("downloadRegistrationsCsvBtn");
-const registrationsTableBody = document.querySelector("#registrationsTable tbody");
+const downloadRegistrationsCsvBtn = document.getElementById(
+  "downloadRegistrationsCsvBtn",
+);
+const registrationsTableBody = document.querySelector(
+  "#registrationsTable tbody",
+);
 
 const daySelect = document.getElementById("daySelect");
 const loadAttendanceBtn = document.getElementById("loadAttendanceBtn");
-const downloadAttendanceCsvBtn = document.getElementById("downloadAttendanceCsvBtn");
+const downloadAttendanceCsvBtn = document.getElementById(
+  "downloadAttendanceCsvBtn",
+);
 const attendanceTableBody = document.querySelector("#attendanceTable tbody");
+
+const notifyBtn = document.getElementById("notifySendBtn");
+const notifyEmailInput = document.getElementById("notifyEmail");
+const notifyMsg = document.getElementById("notifyMessage"); // span/div in HTML
 
 let isLoggedIn = false;
 
@@ -41,8 +51,11 @@ loginBtn.addEventListener("click", async () => {
   try {
     const res = await fetch(`${API_BASE}/api/auth/login`, {
       method: "POST",
-      headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ password }),
     });
     const data = await res.json();
     if (data.success) {
@@ -61,10 +74,14 @@ loginBtn.addEventListener("click", async () => {
 
 async function loadSummary() {
   if (!isLoggedIn) return;
-  const event = encodeURIComponent(eventInput.value.trim() || "CyberSprint 2026");
+  const event = encodeURIComponent(
+    eventInput.value.trim() || "CyberSprint 2026",
+  );
   summaryBox.textContent = "Loading summary...";
   try {
-    const data = await fetchJson(`${API_BASE}/api/admin/summary?event=${event}`);
+    const data = await fetchJson(
+      `${API_BASE}/api/admin/summary?event=${event}`,
+    );
     if (!data.success) {
       summaryBox.textContent = data.message || "Failed to load summary.";
       return;
@@ -84,17 +101,22 @@ async function loadSummary() {
 
 async function loadRegistrations() {
   if (!isLoggedIn) return;
-  const event = encodeURIComponent(eventInput.value.trim() || "CyberSprint 2026");
+  const event = encodeURIComponent(
+    eventInput.value.trim() || "CyberSprint 2026",
+  );
   registrationsTableBody.innerHTML = "<tr><td colspan='8'>Loading...</td></tr>";
   try {
-    const data = await fetchJson(`${API_BASE}/api/admin/registrations?event=${event}`);
+    const data = await fetchJson(
+      `${API_BASE}/api/admin/registrations?event=${event}`,
+    );
     if (!data.success) {
       registrationsTableBody.innerHTML = `<tr><td colspan="8">${data.message || "Failed to load registrations."}</td></tr>`;
       return;
     }
     const students = data.students || [];
     if (students.length === 0) {
-      registrationsTableBody.innerHTML = "<tr><td colspan='8'>No registrations found.</td></tr>";
+      registrationsTableBody.innerHTML =
+        "<tr><td colspan='8'>No registrations found.</td></tr>";
       return;
     }
     registrationsTableBody.innerHTML = students
@@ -125,7 +147,9 @@ async function loadRegistrations() {
 
 async function loadAttendance() {
   if (!isLoggedIn) return;
-  const event = encodeURIComponent(eventInput.value.trim() || "CyberSprint 2026");
+  const event = encodeURIComponent(
+    eventInput.value.trim() || "CyberSprint 2026",
+  );
   const day = encodeURIComponent(daySelect.value || "");
   const url = day
     ? `${API_BASE}/api/admin/attendance?event=${event}&day=${day}`
@@ -140,7 +164,8 @@ async function loadAttendance() {
     }
     const records = data.records || [];
     if (records.length === 0) {
-      attendanceTableBody.innerHTML = "<tr><td colspan='5'>No attendance records found.</td></tr>";
+      attendanceTableBody.innerHTML =
+        "<tr><td colspan='5'>No attendance records found.</td></tr>";
       return;
     }
     attendanceTableBody.innerHTML = records
@@ -167,20 +192,51 @@ async function loadAttendance() {
 // CSV downloads
 downloadRegistrationsCsvBtn.addEventListener("click", () => {
   if (!isLoggedIn) return;
-  const event = encodeURIComponent(eventInput.value.trim() || "CyberSprint 2026");
+  const event = encodeURIComponent(
+    eventInput.value.trim() || "CyberSprint 2026",
+  );
   const url = `${API_BASE}/api/admin/registrations/csv?event=${event}`;
   window.location.href = url;
 });
 
 downloadAttendanceCsvBtn.addEventListener("click", () => {
   if (!isLoggedIn) return;
-  const event = encodeURIComponent(eventInput.value.trim() || "CyberSprint 2026");
+  const event = encodeURIComponent(
+    eventInput.value.trim() || "CyberSprint 2026",
+  );
   const day = encodeURIComponent(daySelect.value || "");
   const url = day
     ? `${API_BASE}/api/admin/attendance/csv?event=${event}&day=${day}`
     : `${API_BASE}/api/admin/attendance/csv?event=${event}`;
   window.location.href = url;
 });
+
+if (notifyBtn && notifyEmailInput) {
+  notifyBtn.addEventListener("click", async () => {
+    const email = notifyEmailInput.value.trim();
+    if (!email) {
+      alert("Please enter an email address.");
+      return;
+    }
+    // TODO: call your backend endpoint here
+    
+      const response = await fetch(`${API_BASE}/api/students/sendEmail?email=${encodeURIComponent(email)}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" }
+    });
+
+    const result = await response.json();
+      if (result.success) {
+        notifyMsg.textContent = result.message || "Email sent successfully.";
+        notifyMsg.style.color = "#4ade80"; // success
+      } else {
+        notifyMsg.textContent = result.message || "Failed to send email.";
+        notifyMsg.style.color = "#f97373"; // error 
+      }
+
+    console.log("Send email to:", email);
+  });
+}
 
 // Buttons
 refreshBtn.addEventListener("click", loadSummary);
