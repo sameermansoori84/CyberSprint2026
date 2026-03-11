@@ -1,5 +1,6 @@
 // public/js/register.js
 // Backend API URL (Render deployment)
+// const API_BASE = "http://localhost:5000";
 const API_BASE = "https://cybersprint2026-ob49.onrender.com";
 
 const form = document.getElementById("regForm");
@@ -10,6 +11,7 @@ const collegeDropdown = document.getElementById("collegeDropdown");
 const collegeTextbox = document.getElementById("collegeTextbox");
 const collegeHidden = document.getElementById("collegeHidden");
 const collegeLabel = document.getElementById("collegeLabel");
+const formSubmit = document.getElementById("formSubmit");
 
 // 1. BMU colleges vs Other University textbox
 university.addEventListener("change", () => {
@@ -88,6 +90,8 @@ course.addEventListener("change", () => {
 // 3. Submit form
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
+  formSubmit.disabled = true;
+  formSubmit.style.opacity = "0.6";
 
   const formData = new FormData(form);
   const data = Object.fromEntries(formData);
@@ -122,6 +126,8 @@ form.addEventListener("submit", async (e) => {
       messageEl.innerHTML = `❌ ${result.message}`;
       messageEl.className = "error";
     }
+     formSubmit.disabled = false;
+     formSubmit.style.opacity = "1";
   } catch (error) {
     messageEl.innerHTML = `❌ Network error: ${error.message}`;
     messageEl.className = "error";
