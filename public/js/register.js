@@ -126,10 +126,10 @@ form.addEventListener("submit", async (e) => {
       messageEl.innerHTML = `❌ ${result.message}`;
       messageEl.className = "error";
     }
-     formSubmit.disabled = false;
-     formSubmit.style.opacity = "1";
   } catch (error) {
     messageEl.innerHTML = `❌ Network error: ${error.message}`;
     messageEl.className = "error";
   }
+    formSubmit.disabled = false;
+    formSubmit.style.opacity = "1";
 });
